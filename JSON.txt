@@ -1,0 +1,37 @@
+{
+  'latest_mars_news': 
+  {
+    "Curiosity Mars Rover's Summer Road Trip Has Begun": 'After more than a year in the "clay-bearing unit," Curiosity is making a mile-long journey around some deep sand so that it can explore higher up Mount Sharp.'
+  },
+  'featured_image': 
+  {
+    'featured_image': 'https://spaceimages-mars.com/image/featured/mars3.jpg'
+  },
+  'mars_facts': 
+  {
+    'Equatorial Diameter': '6,792 km',
+    'Polar Diameter': '6,752 km',
+    'Mass': '\t6.39 × 10^23 kg (0.11 Earths)',
+    'Moons': '\t2 ( Phobos  &  Deimos )',
+    'Orbit Distance': '\t227,943,824 km (1.38 AU)',
+    'Orbit Period': '\t687 days (1.9 years)',
+    'Surface Temperature': '\t-87 to -5 °C',
+    'First Record': '\t2nd millennium BC',
+    'Recorded By': '\tEgyptian astronomers'
+  },
+  'hemisphere_image_urls': 
+  [
+    {
+      'Cerberus Hemisphere ': 'https://marshemispheres.com/images/full.jpg'
+    },
+    {
+      'Schiaparelli Hemisphere ': 'https://marshemispheres.com/images/schiaparelli_enhanced-full.jpg'
+    },
+    {
+      'Syrtis Major Hemisphere ': 'https://marshemispheres.com/images/syrtis_major_enhanced-full.jpg'
+    },
+    {
+      'Valles Marineris Hemisphere ': 'https://marshemispheres.com/images/valles_marineris_enhanced-full.jpg'
+    }
+  ]
+}
