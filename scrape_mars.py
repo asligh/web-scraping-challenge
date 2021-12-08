@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup as bs
 import time
 from webdriver_manager.chrome import ChromeDriverManager
 
-
 #JSON viewer URL http://jsonviewer.stack.hu/
 
 RED_PLANET_URL       =  "https://redplanetscience.com/"
@@ -19,7 +18,8 @@ def scrape() -> dict:
     scrape_mars_images()
     scrape_galaxy_facts()
     scrape_mars_hemispheres()
-    print(mars_facts)
+    return mars_facts
+    #print(mars_facts)
 
 def scrape_red_planet():
 
