@@ -1,13 +1,14 @@
+import pandas as pd
+import time
 from splinter import Browser
 from bs4 import BeautifulSoup as bs
-import time
 from webdriver_manager.chrome import ChromeDriverManager
 
 #JSON viewer URL http://jsonviewer.stack.hu/
 
 RED_PLANET_URL       =  "https://redplanetscience.com/"
 MARS_IMAGES_URL      =  "https://spaceimages-mars.com/"
-GALAXY_FACTS_URL     =  "https://galaxyfacts-mars.com/"
+PLANET_FACTS_URL     =  "https://galaxyfacts-mars.com/"
 MARS_HEMISPHERES_URL =  "https://marshemispheres.com/"
 
 mars_facts={}
@@ -16,10 +17,10 @@ mars_facts={}
 def scrape() -> dict:
     scrape_red_planet()
     scrape_mars_images()
-    scrape_galaxy_facts()
+    scrape_planet_facts()
     scrape_mars_hemispheres()
-    return mars_facts
-    #print(mars_facts)
+    #return mars_facts
+    print(mars_facts)
 
 def scrape_red_planet():
 
@@ -52,6 +53,7 @@ def scrape_mars_images():
 
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser         = Browser('chrome', **executable_path, headless=False)  
+
     featured_image_hash = {}
 
     browser.visit(MARS_IMAGES_URL)
@@ -63,14 +65,15 @@ def scrape_mars_images():
     img_target_url      = mars_image_wrapper.find('a')['href']
     featured_image_url  = mars_images_url + img_target_url
     featured_image_hash = {"featured_image":featured_image_url}
+
     mars_facts.update({"featured_image":featured_image_hash})
 
-def scrape_galaxy_facts():
+def scrape_planet_facts():
 
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser         = Browser('chrome', **executable_path, headless=False)    
 
-    url = GALAXY_FACTS_URL
+    url = PLANET_FACTS_URL
     browser.visit(url)
 
     time.sleep(1)
@@ -79,38 +82,60 @@ def scrape_galaxy_facts():
     html = browser.html
     soup = bs(html, "html.parser")    
 
-    equitorial_diameter = "Equatorial Diameter"
-    polar_diameter      = "Polar Diameter"
-    mass                = "Mass"
-    moon                = "Moons"
-    orbit_distance      = "Orbit Distance"
-    orbit_period        = "Orbit Period"
-    surface_temperature = "Surface Temperature"
-    first_record        = "First Record"
-    recorded_by         = "Recorded By"
+    df_column_1_name = "Description"
+    df_column_2_name = "Mars"
+    df_column_3_name = "Earth"
 
-    mars_fact_hash = {
-                        equitorial_diameter:None,
-                        polar_diameter:None,
-                        mass:None,
-                        moon:None,
-                        orbit_distance:None,
-                        orbit_period:None,
-                        surface_temperature:None,
-                        first_record:None,
-                        recorded_by:None
-                    }
+    descriptions = []
+    mars_fcts    = []
+    earth_fcts   = []
 
-    mars_facts_wrapper = soup.find('table', class_='table-striped')
-    body = mars_facts_wrapper.find('tbody')
-    table_rows = body.find_all('tr')
+    mars_idx  = 0
+    earth_idx = 1
 
-    for table_row in table_rows:
-        measurement_key   = table_row.find('th').text.replace(':','')
-        measurement_value = table_row.find('td').text.replace(':','')
-        mars_fact_hash.update({measurement_key:measurement_value})
-    
-    mars_facts.update({"mars_facts":mars_fact_hash})
+    planet_facts_wrapper = soup.find('div', class_='diagram')
+    planet_fact_table    = planet_facts_wrapper.find('table', class_="table")
+    planet_fact_rows     = planet_fact_table.find_all('tr')
+
+    for planet_fact_row in planet_fact_rows:
+        row_desc = planet_fact_row.find('th').text.strip()
+        descriptions.append(row_desc)
+        
+        facts = planet_fact_row.find_all('td')
+        
+        mars_fact  = facts[mars_idx].text.strip()
+        earth_fact = facts[earth_idx].text.strip()
+        
+        mars_fcts.append(mars_fact)
+        earth_fcts.append(earth_fact)
+
+    planet_facts_df = pd.DataFrame({
+                                        df_column_1_name: descriptions, 
+                                        df_column_2_name: mars_facts,
+                                        df_column_3_name: earth_fcts,
+                                  })
+        
+    planet_facts_df.set_index(df_column_1_name,inplace=True)
+ 
+    planet_facts_html = planet_facts_df.to_html( buf=None, 
+                                                columns=None, 
+                                                header=True, 
+                                                index=True, 
+                                                na_rep='NaN', 
+                                                formatters=None, 
+                                                float_format=None, 
+                                                sparsify=None, 
+                                                index_names=True, 
+                                                justify=None, 
+                                                bold_rows=True, 
+                                                classes=None, 
+                                                escape=True, 
+                                                max_rows=None,
+                                                max_cols=None, 
+                                                show_dimensions=False, 
+                                                notebook=False )
+
+    mars_facts.update({"planet_facts":{planet_facts_html}})
 
 def scrape_mars_hemispheres():
 
@@ -152,4 +177,4 @@ def scrape_mars_hemispheres():
     mars_facts.update({'hemisphere_image_urls' : hemisphere_image_urls})
 
 #My function to call scrape as a test
-#scrape()
+scrape()
