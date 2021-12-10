@@ -18,15 +18,17 @@ mongo = PyMongo(app, uri=f"mongodb://localhost:27017/{mongo_database_name}")
 #root route
 @app.route("/")
 def index():
-    mars_facts = mongo.db.mars_facts
+    mars_facts = mongo.db.mars_facts.find_one()
     return render_template("index.html", mars_facts=mars_facts)
 
 @app.route("/scrape")
 def scraper():
     mars_facts     = mongo.db.mars_facts
     mars_fact_data = sm.scrape()
-    mars_facts.update({}, mars_fact_data, upsert=True)
+    #mars_facts.update({}, mars_fact_data, upsert=True)
+    #mars_facts.update({}, {"hi":"ashley"}, upsert=True)  
+    mars_facts.update_many({}, {"$set": mars_fact_data}, upsert=True) 
     return redirect("/", code=302)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True) 

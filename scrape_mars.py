@@ -52,6 +52,8 @@ def scrape_red_planet():
         
         break #only take first news item
 
+    browser.quit()
+
 def scrape_mars_images():
 
     executable_path = {'executable_path': ChromeDriverManager().install()}
@@ -68,6 +70,9 @@ def scrape_mars_images():
     featured_image_url = [mars_images_url + img_target_url]
 
     mars_facts["featured_image"] = featured_image_url    
+
+    browser.quit()
+
 
 def scrape_planet_facts():
 
@@ -136,7 +141,9 @@ def scrape_planet_facts():
                                                 show_dimensions=False, 
                                                 notebook=False )
 
-    mars_facts["mars_facts"] = [planet_facts_html]  
+    mars_facts["planet_facts"] = [planet_facts_html]  
+
+    browser.quit()    
 
 def scrape_mars_hemispheres():
 
@@ -178,5 +185,7 @@ def scrape_mars_hemispheres():
 
     mars_facts["mars_images"] = hemisphere_image_urls
 
-#My function to call scrape as a test
+    browser.quit()    
+
+#Test
 #scrape()
