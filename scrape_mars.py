@@ -19,8 +19,8 @@ def scrape() -> dict:
     scrape_mars_images()
     scrape_planet_facts()
     scrape_mars_hemispheres()
-    #return mars_facts
-    print(mars_facts)
+    return mars_facts
+    #print(mars_facts)
 
 def scrape_red_planet():
 
@@ -179,4 +179,4 @@ def scrape_mars_hemispheres():
     mars_facts["mars_images"] = hemisphere_image_urls
 
 #My function to call scrape as a test
-scrape()
+#scrape()
