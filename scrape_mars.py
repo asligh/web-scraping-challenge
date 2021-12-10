@@ -36,17 +36,20 @@ def scrape_red_planet():
     html = browser.html
     soup = bs(html, "html.parser")
     news_items = soup.find_all('div', class_='list_text')
-    news_hash = {}
 
     news_title = None
     news_body  = None
-  
+    featured_news = []
+
     for news_item in news_items:
+        
         news_title = news_item.find('div',class_='content_title').text
         news_body = news_item.find('div',class_="article_teaser_body").text
-
-        news_hash.update({news_title:news_body})
-        mars_facts.update({"latest_mars_news":news_hash})
+        
+        featured_news.append({"news_title"     : news_title, "news_paragraph" : news_body}) 
+        
+        mars_facts["featured_news"]=featured_news
+        
         break #only take first news item
 
 def scrape_mars_images():
@@ -54,19 +57,17 @@ def scrape_mars_images():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser         = Browser('chrome', **executable_path, headless=False)  
 
-    featured_image_hash = {}
-
     browser.visit(MARS_IMAGES_URL)
+    time.sleep(1)
+
     html = browser.html
     soup = bs(html, 'html.parser')
+    mars_images_url = browser.url
+    mars_image_wrapper = soup.find_all('div', class_='floating_text_area')[0]
+    img_target_url = mars_image_wrapper.find('a')['href']
+    featured_image_url = [mars_images_url + img_target_url]
 
-    mars_images_url     = browser.url
-    mars_image_wrapper  = soup.find_all('div', class_='floating_text_area')[0]
-    img_target_url      = mars_image_wrapper.find('a')['href']
-    featured_image_url  = mars_images_url + img_target_url
-    featured_image_hash = {"featured_image":featured_image_url}
-
-    mars_facts.update({"featured_image":featured_image_hash})
+    mars_facts["featured_image"] = featured_image_url    
 
 def scrape_planet_facts():
 
@@ -87,8 +88,8 @@ def scrape_planet_facts():
     df_column_3_name = "Earth"
 
     descriptions = []
-    mars_fcts    = []
-    earth_fcts   = []
+    mars_fcts   = []
+    earth_fcts  = []
 
     mars_idx  = 0
     earth_idx = 1
@@ -111,13 +112,13 @@ def scrape_planet_facts():
 
     planet_facts_df = pd.DataFrame({
                                         df_column_1_name: descriptions, 
-                                        df_column_2_name: mars_facts,
+                                        df_column_2_name: mars_fcts,
                                         df_column_3_name: earth_fcts,
-                                  })
-        
+                                })
+    
     planet_facts_df.set_index(df_column_1_name,inplace=True)
- 
-    planet_facts_html = planet_facts_df.to_html( buf=None, 
+    
+    planet_facts_html = planet_facts_df.to_html(buf=None, 
                                                 columns=None, 
                                                 header=True, 
                                                 index=True, 
@@ -135,7 +136,7 @@ def scrape_planet_facts():
                                                 show_dimensions=False, 
                                                 notebook=False )
 
-    mars_facts.update({"planet_facts":{planet_facts_html}})
+    mars_facts["mars_facts"] = [planet_facts_html]  
 
 def scrape_mars_hemispheres():
 
@@ -171,10 +172,11 @@ def scrape_mars_hemispheres():
 
             if 'Sample' == image_pict_desc:
                 img_url = mars_hemispheres_url + image_item.find('a')['href']
-                hemisphere_image_urls.append({title:img_url})
+                image_dict = {"title":title,"img_url":img_url}
+                hemisphere_image_urls.append(image_dict)
                 break
 
-    mars_facts.update({'hemisphere_image_urls' : hemisphere_image_urls})
+    mars_facts["mars_images"] = hemisphere_image_urls
 
 #My function to call scrape as a test
 scrape()
