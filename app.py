@@ -25,8 +25,6 @@ def index():
 def scraper():
     mars_facts     = mongo.db.mars_facts
     mars_fact_data = sm.scrape()
-    #mars_facts.update({}, mars_fact_data, upsert=True)
-    #mars_facts.update({}, {"hi":"ashley"}, upsert=True)  
     mars_facts.update_many({}, {"$set": mars_fact_data}, upsert=True) 
     return redirect("/", code=302)
 

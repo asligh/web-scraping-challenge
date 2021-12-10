@@ -141,6 +141,8 @@ def scrape_planet_facts():
                                                 show_dimensions=False, 
                                                 notebook=False )
 
+    planet_facts_html = planet_facts_html.replace("right","left")
+    
     mars_facts["planet_facts"] = [planet_facts_html]  
 
     browser.quit()    
