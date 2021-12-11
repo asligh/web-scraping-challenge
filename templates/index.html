@@ -16,6 +16,8 @@
 </head>
 
 <body>
+
+  <br>
   <div class="container">
 
     <div class="jumbotron text-center">
@@ -34,26 +36,21 @@
     </div>
 
     <div class="row">
-      <div class="col-md-6 col-sm-3 justify-content-md-left">
-          <br><br><br>
+      <div class="col-md-6 col-sm-3 justify-content-md-left float-left">
+          <br>
           <h3>Featured Mars Image</h3>
-          <hr> <br>     
-          
           {% for featured_mars_image in mars_facts.featured_image %}
           
-          <!-- <img src="{{featured_mars_image}}" class="rounded float-left"> -->
+              <img src="{{featured_mars_image}}" class="float-left" style="width: 600px;height: 400px;">
 
           {% endfor %}
 
           <br/>
       </div>
 
-
-      <div class="col-md-6 col-sm-3 justify-content-right">
-        <br><br><br>
+      <div class="col-md-6 col-sm-3 justify-content-right float-right" style="padding-left: 13%;">
+        <br>
         <h5>Mars Facts</h5>
-        <hr> <br>     
-        
         {{ mars_facts.planet_facts[0] | safe }}
 
         <br/>
