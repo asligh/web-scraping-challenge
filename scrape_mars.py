@@ -165,7 +165,7 @@ def scrape_mars_hemispheres():
     mars_hemispheres_url     = browser.url
 
     for hemisphere in hemispheres:
-        title               = hemisphere.find('h3').text.replace('Enhanced','')
+        title               = hemisphere.find('h3').text
         large_image_nav_url = mars_hemispheres_url + hemisphere.find('a')['href']
 
         browser.visit(large_image_nav_url)
